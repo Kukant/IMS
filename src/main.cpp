@@ -3,21 +3,36 @@
 #include "simlib.h"
 #include "main.h"
 
-#define VEJCE_INIT 250
-#define MONEY_INIT 250
-#define SIMULATION_DAYS 365
+#define SIMULATION_DAYS (365)
 
-#define KRABICE_KAPACITA 100
-#define LARVA_NA_PRODEJ_CENA 15
-#define CVRCEK_NA_PRODEJ_CENA 15
-#define ONE_BOX_FOOD_PRICE 100
+#define MONEY_INIT 0
 
-#define VEJCE_CAS_LIHNUTI_MIN 10
-#define VEJCE_CAS_LIHNUTI_MAX 14
-#define CVRCEK_CAS_DOSPIVANI 30
-#define CVRCEK_CAS_KLADENI_MIN 10
-#define CVRCEK_CAS_KLADENI_MAX 14
-#define CVRCEK_POCET_VAJEC 20 //pocet nakladenych vajicek za dobu kladeni
+#define VEJCE_INIT 650
+
+/**
+ * VSECHNY POCTY S CVRCKAMA/LARVAMA JSOU VE STOVKACH
+ */
+// tj 10000
+#define KRABICE_KAPACITA 200
+
+// tj cena za 100 cvrcku
+#define LARVA_NA_PRODEJ_CENA 1.9f
+#define CVRCEK_NA_PRODEJ_CENA 8.9f
+
+#define ONE_BOX_FOOD_PRICE 1000
+
+// tj 100 vajec
+#define VEJCE_CENA 0.65f
+#define VEJCE_SE_VYLIHNE 0.5
+
+#define VEJCE_CAS_LIHNUTI_MIN 5
+#define VEJCE_CAS_LIHNUTI_MAX 7
+
+#define CVRCEK_CAS_DOSPIVANI 28
+#define POCET_DNU_ROZMNOZOVANI 8 // dni
+
+
+#define CVRCEK_POCET_VAJEC_DEN 95
 
 
 Queue KrabiceQ;
@@ -25,85 +40,77 @@ Queue KrabiceQ;
 double moneyBitch = MONEY_INIT;
 
 // abychom zjistili moment kdy uz jsou vsechna vejca vyklubana
-int processedVejcaInit = 0;
-int vajec = VEJCE_INIT;
-
-// proces vejca -> x dni -> vsici naraz do fronty pred ->
-// proces larva -> naplnit krabici -> zbytek prodat
-// proces krabice -> proces rozdeleni na 1:9
+long long vajec = 0;
 
 
 void Larva::Behavior() {
     // cekej nez se vylihnou ostatni
+    std::cout << "Money na konci: " << moneyBitch << std::endl;
     this->Passivate();
 };
 
 void Rodic::Behavior() {
-    int rozsah_plodnosti = CVRCEK_CAS_KLADENI_MAX - CVRCEK_CAS_KLADENI_MIN;
-    int doba_plodnosti = rand() % (rozsah_plodnosti + 1) + CVRCEK_CAS_KLADENI_MIN; //doba plodnosi nahodne ve zvolenem rozsahu
-    for (int i = 0; i < doba_plodnosti; i++) {
+    for (int i = 0; i < POCET_DNU_ROZMNOZOVANI; i++) {
         Wait(1);
-        for (int y = 0; y < CVRCEK_POCET_VAJEC; y++){
-            vajec++;
+        for (long j = 0; j < CVRCEK_POCET_VAJEC_DEN; j++) {
             (new Vejca)->Activate();
-
         }
-
-
     }
-
 };
+
 
 void Krabice::Behavior() {
     Wait(CVRCEK_CAS_DOSPIVANI); // Doba nez budou cvrci dospeli
     moneyBitch -= ONE_BOX_FOOD_PRICE; // vem penize na krmeni
     // 90% prodej
-    moneyBitch += ((int) (KRABICE_KAPACITA * 0.9)) * CVRCEK_NA_PRODEJ_CENA;
+    moneyBitch += ((int) (KRABICE_KAPACITA * 0.95)) * CVRCEK_NA_PRODEJ_CENA;
     // 10% dej na vytvareni decek
-    int na_rozmnozovani = KRABICE_KAPACITA - ((int) (KRABICE_KAPACITA * 0.9));
-    // TODO asi nejake nove procesy na tvorbu deti, idealne pujdou zase do fronty nejake nebo tak neco
+    int na_rozmnozovani = KRABICE_KAPACITA - ((int) (KRABICE_KAPACITA * 0.95));
 
+    vajec += na_rozmnozovani * POCET_DNU_ROZMNOZOVANI * CVRCEK_POCET_VAJEC_DEN;
     for (int i = 0; i < na_rozmnozovani; i++) { //vytvor rodice pro kazdeho neprodaneho
         (new Rodic)->Activate();
-
     }
 };
 
 // zpracovava frontu pred krabici
 // maximum narve do krabice, zbytek proda.
-// simulujeme vice krabic
+// simulujeme vice krabic - uz ne pls
 void RozdelAPanuj::Behavior() {
-    int do_krabice = int(KrabiceQ.Length() / KRABICE_KAPACITA);
-    if (do_krabice == 0) {
-        // TODO kup nove larvy
+    if (KrabiceQ.Length() >= KRABICE_KAPACITA) {
+        // dejme je do krabice
+        (new Krabice)->Activate();
+        // zbytek prodat
+        moneyBitch += (KrabiceQ.Length() - KRABICE_KAPACITA) * LARVA_NA_PRODEJ_CENA;
     } else {
-        for (int i = 0; i < do_krabice; i++)
-            (new Krabice)->Activate();
-
-        int forSale = KrabiceQ.Length() - do_krabice * KRABICE_KAPACITA;
-        moneyBitch += forSale * LARVA_NA_PRODEJ_CENA;
-
-        KrabiceQ.clear();
+        moneyBitch += KrabiceQ.Length() * LARVA_NA_PRODEJ_CENA;
+        (new VejcaGenerator)->Activate();
     }
+    KrabiceQ.clear();
 };
 
 void Vejca::Behavior() {
-    if (Random() > 0.3) {
+    if (Random() > VEJCE_SE_VYLIHNE) {
         Wait(Uniform(VEJCE_CAS_LIHNUTI_MIN, VEJCE_CAS_LIHNUTI_MAX)); // cekame nez se vylihne
-        KrabiceQ.InsFirst(new Larva());
+        KrabiceQ.Insert(new Larva());
     }
 
     vajec--;
+
     if (vajec == 0) {
-        // Posledni vejce vylihnuty
+        // Posledni vejce vylihnute
         (new RozdelAPanuj)->Activate();
+        std::cout << KrabiceQ.Length() << std::endl;
     }
+
 };
 
 void VejcaGenerator::Behavior() {
-    for (int i = 0; i < 250; i++)
+    moneyBitch -= VEJCE_INIT * VEJCE_CENA;
+    vajec += VEJCE_INIT;
+    for (int i = 0; i < VEJCE_INIT; i++) {
         (new Vejca)->Activate();
-
+    }
 };
 
 
