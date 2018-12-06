@@ -10,8 +10,6 @@
 #define CVRCEK_NA_PRODEJ_CENA 15
 #define ONE_BOX_FOOD_PRICE 100
 
-Facility Krabice("Krabice");
-
 Queue KrabiceQ;
 
 double moneyBitch = MONEY_INIT;
@@ -22,6 +20,14 @@ int processedVejcaInit = 0;
 // proces vejca -> x dni -> vsici naraz do fronty pred ->
 // proces larva -> naplnit krabici -> zbytek prodat
 // proces krabice -> proces rozdeleni na 1:9
+
+
+class Larva: public Process {
+    void Behavior() {
+        // cekej nez se vylihnou ostatni
+        this->Passivate();
+    }
+};
 
 class Krabice: public Process {
     void Behavior() {
@@ -34,14 +40,6 @@ class Krabice: public Process {
         // TODO asi nejake nove procesy na tvorbu deti, idealne pujdou zase do fronty nejake nebo tak neco
     }
 };
-
-class Larva: public Process {
-    void Behavior() {
-        // cekej nez se vylihnou ostatni
-        this->Passivate();
-    }
-};
-
 
 // zpracovava frontu pred krabici
 // maximum narve do krabice, zbytek proda.
@@ -95,4 +93,5 @@ int main() {
     (new VejcaGenerator)->Activate();
     Run();
     std::cout << "Hotovka za " << Time << std::endl;
+    std::cout << "Money na konci: " << moneyBitch << std::endl;
 }
