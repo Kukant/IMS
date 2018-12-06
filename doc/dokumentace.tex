@@ -1,0 +1,93 @@
+ \documentclass[a4paper, 12pt]{article}
+\usepackage[left=2.5cm, right=2.5cm,top=2.5cm,text ={18cm,25cm}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{hhline}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{svg}
+\usepackage{changepage}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+\renewcommand{\contentsname}{Obsah}
+
+\begin{document}
+\begin{center} 
+\thispagestyle{empty}
+\Huge
+\textsc{Fakulta informačních technologií\\Vysoké učení
+technické v Brně}\\
+\vspace{\stretch{0.167}}
+
+\includegraphics[scale = 0.5]{fit-logo.eps}
+
+\vspace{\stretch{0.215}}
+
+\LARGE Technická zpráva projektu předmětu IMS\\
+\Huge Varianta 4: Chov hmyzu pro potravinářské a průmyslové účely \\
+\vspace{\stretch{0.218}}
+\Huge
+Tomáš Kukaň (xkukan00) \\
+Petr Knetl (xknetl00) \\
+
+\vspace{\stretch{0.400}}
+\end{center}
+{\LARGE \hfill
+2. prosince 2018}
+
+\newpage
+
+\tableofcontents
+\pagenumbering{arabic}
+\thispagestyle{empty}
+\setcounter{page}{1}
+\newpage
+
+\section{Úvod}
+Tento text vznikl jako dokumentace projetku Modelování a Simulace. Zadáním bylo vytvořit a nasimulovat model Hmyzí farmy v podmínkách uzemí České Republiky. Náš simulovaný model cvrččí farmu, konkrétně vliv druhu chovaných cvrčků na finanční výnos firmy. Další sledovaným aspektem je poměr cvrčků uchovaých pro vytvoření další generace ku dílu zpracovaného a prodaného jako finální produkt fabriky zákazníkům.
+
+\subsection{předloha modelu a zdroje informací}
+Model byl vytvořen na základě informací získaných z internetu a od jednoho týpka co nám poradil TODO. Veškeré zdroje jsou uvedeny na konci dokumentu v referencích.
+
+\section{Rozbor tématu}
+K vytvoření modelu je potřeba nejprve dobře znát a porozumět jeho předloze. Reálná cvrční farma se zabývá chovem cvrčků pro potravinářské účely. Jedná se o velmi efektivní a udržitelný způsob produkce nutričně kvalitní potravy. V asijských zemích je tento způsob obživy naprostro normální a má svojí tradici, ale do západních zemí se teprve dostáva. Čím dál více je chov hmyzu vyzdvyhován právě kvůli udržitelnosti a celkové ekologické šetrnosti oproti chovu hospodářských zvířat. Předpokládá se že chov hmyzu budu čím dál více šířit, například z důvodu, že se hmyz leto legislativně stane povoleným jídlem v celé Evropské unii. V České republice se žádne velké cvrččí farmy nevyskytují, avšak v zahraničí (převážně v Thajsku) již farmy českých vlastníků existují, a cvrččí produkty importují. 
+
+K produkci Crčků je potřeba hned několik věcí. Mezi ty nejdůležitějsí patří kvalitní krmení, voda a prostory pro chov kde lze regulovat a hlavně udržovat správnou teplotu a vlhkost vzduchu. Pro správný růst a zdraví cvrčků je potřeba zachovávat teplotu v místnosti mezi dvacetisedmy a třicetidvěma stupni Celsia a vlhkost vzduchu mezi třiceti až padesáti procenty. Pro líhnutí vajíček jsou podmínky ještě přísnější. Na kvalitní vylíhnutí je potřeba udržovat vlhkost blízko sto procentům a teplota nesmí klesnout pod dvacetsedm stupňů Celsia. 
+
+Celý proces (životní cyklus generace) začíná u nakladench vajíček. Vajíčka jsou odebrána od rodičů a přesunuta do líhně, neboli místa splňujícího podmínky na teplotu a vlhkost vzduchu. V líhní stráví vajíčka v průměru mezi deseti až čtrnácti dny. Jakmile se vajíčka vylíhnout, jsou přesunuty zpět do farmy. Další etapa ve vývojí cvrčků je dospívání. To trvá přobližně třicet dní. V průběhu dospívání je potřeba každý den cvrčkům doplňovat vodu a krmení. Voda je cvrčkům podáváná nacucané mycí houbě, která je potřeba pravidelně čistit pro zdraví cvrčků. Jakmile cvrčci dospějí, tak většina je usmrcena připraveno pro další zpracování, převážne v celku pro nebo je z nich vytvořena mouka. Zbytek cvrčků je nechán pro nakladení vajíček a vytvoření další generace. Pro vytvoření další generace stačí zlomek z celkových cvrčků, protože jsou při kladení vajíček velice aktivní a množí se exponenciální rychlostí. 
+
+\newpage
+
+\section{Konceptuální návrh}
+Náš koncepotuální model se soustředí na vliv poměru zpracovaných cvrčků a těch kteří jsou ušetřeni pro vytvoření další generace, zároveň se sledováním efektivity chování různýc druhů cvrčků na výši finančního výnosu. Pro takovouto simulaci není potřeba kompletní model farmy, tudiž jsou něteré části zanedbány a model je zjednodušen. Například v našem modelu nedochází ke krmení cvrčků každý den, nýbrž je finanční suma ztržena až po celém životním cyklu cvrčků. Návhr modelu je v podobě petriho sítě zobrazen na obrázku TODO
+
+\section{Implementace}
+Simulace byla vytvořena v programovacím jazyku \texttt{C++} s využitím knihovny \texttt{SIMLIB}. Jazyk C++ byl zvolen z důvodu využití objektového návrhu aplikace. Části programu jsou převzaty z přednášek a demostračních příkladů předmětu IMS. 
+
+\section{Zdroje informací}
+\setlength\parindent{0pt}
+[1] PATOČKOVÁ, Martina. Stamiliony cvrčků pro Evropu. Češi otevřou největší hmyzí farmu na světě. Idnes [online]. 2018, [cit. 2018-12-06]. Dostupné z: https://ekonomika.idnes.cz/hmyz-jidlo-potravina-crvcci-d1j-/ekonomika.aspx?c=A180204\_094800\_ekonomika\_ane\\
+
+[2] KOIVU TELEVISION. KoivuTV and Johanna Koivu gets acquainted with a Finnish cricket farm [Video File]. 2018, [cit. 2018-12-06]. Dostupné z https://youtu.be/gNG7lOFBM8\\
+
+[3] COWBOY CRICKETS. Cricket Farming For Food and Feed [Video File]. 2018, [cit. 2018-12-06]. Dostupné z https://youtu.be/JUgDsxWYSS8\\
+
+[4] PERINGER. Modelování a simulace [online]. 2017, [cit. 2018-12-06]. Dostupné z:\\ https://wis.fit.vutbr.cz/FIT/st/cfs.php?file=\%2Fcourse\%2FIMS-IT\%2Flectures\%2FIMS.pdf\&cid=12760 \\
+
+[5] PERINGER. Popis simulační knihovny SIMLIB [online]. 1997, [cit. 2018-12-06]. Dostupné z: https://www.fit.vutbr.cz/~peringer/SIMLIB/doc/html-cz/
+
+
+
+
+
+
+
+\end{document}
