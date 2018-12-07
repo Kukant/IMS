@@ -1,13 +1,12 @@
 #include <iostream>
+#include <stdio.h>
 
 #include "simlib.h"
 #include "main.h"
 
-#define SIMULATION_DAYS (365)
+#define SIMULATION_DAYS 365
 
 #define MONEY_INIT 0
-
-#define VEJCE_INIT 650
 
 /**
  * VSECHNY POCTY S CVRCKAMA/LARVAMA JSOU VE STOVKACH
@@ -16,7 +15,6 @@
 #define KRABICE_KAPACITA 200
 
 // tj cena za 100 cvrcku
-#define LARVA_NA_PRODEJ_CENA 1.9f
 #define CVRCEK_NA_PRODEJ_CENA 8.9f
 
 #define ONE_BOX_FOOD_PRICE 1000
@@ -32,20 +30,29 @@
 #define POCET_DNU_ROZMNOZOVANI 8 // dni
 
 
-#define CVRCEK_POCET_VAJEC_DEN 95
+#define VELIKOST_LIHNE ((int)(2.5 * KRABICE_KAPACITA))
+#define CVRCEK_POCET_VAJEC_DEN 20
 
 
 Queue KrabiceQ;
 
+// promenne pro statistiku
 double moneyBitch = MONEY_INIT;
+long zahozena_vejce = 0;
+long zahozene_deti = 0;
 
 // abychom zjistili moment kdy uz jsou vsechna vejca vyklubana
 long long vajec = 0;
 
+// hodnota 0-1
+double prodej_procent = 0.95;
+
+Store Lihen("Lihen", VELIKOST_LIHNE);
+
+
 
 void Larva::Behavior() {
     // cekej nez se vylihnou ostatni
-    std::cout << "Money na konci: " << moneyBitch << std::endl;
     this->Passivate();
 };
 
@@ -63,9 +70,9 @@ void Krabice::Behavior() {
     Wait(CVRCEK_CAS_DOSPIVANI); // Doba nez budou cvrci dospeli
     moneyBitch -= ONE_BOX_FOOD_PRICE; // vem penize na krmeni
     // 90% prodej
-    moneyBitch += ((int) (KRABICE_KAPACITA * 0.95)) * CVRCEK_NA_PRODEJ_CENA;
+    moneyBitch += ((int) (KRABICE_KAPACITA * prodej_procent)) * CVRCEK_NA_PRODEJ_CENA;
     // 10% dej na vytvareni decek
-    int na_rozmnozovani = KRABICE_KAPACITA - ((int) (KRABICE_KAPACITA * 0.95));
+    int na_rozmnozovani = KRABICE_KAPACITA - ((int) (KRABICE_KAPACITA * prodej_procent));
 
     vajec += na_rozmnozovani * POCET_DNU_ROZMNOZOVANI * CVRCEK_POCET_VAJEC_DEN;
     for (int i = 0; i < na_rozmnozovani; i++) { //vytvor rodice pro kazdeho neprodaneho
@@ -80,19 +87,24 @@ void RozdelAPanuj::Behavior() {
     if (KrabiceQ.Length() >= KRABICE_KAPACITA) {
         // dejme je do krabice
         (new Krabice)->Activate();
-        // zbytek prodat
-        moneyBitch += (KrabiceQ.Length() - KRABICE_KAPACITA) * LARVA_NA_PRODEJ_CENA;
+        zahozene_deti += KrabiceQ.Length() - KRABICE_KAPACITA;
     } else {
-        moneyBitch += KrabiceQ.Length() * LARVA_NA_PRODEJ_CENA;
+        zahozene_deti += KrabiceQ.Length();
         (new VejcaGenerator)->Activate();
     }
     KrabiceQ.clear();
 };
 
 void Vejca::Behavior() {
-    if (Random() > VEJCE_SE_VYLIHNE) {
-        Wait(Uniform(VEJCE_CAS_LIHNUTI_MIN, VEJCE_CAS_LIHNUTI_MAX)); // cekame nez se vylihne
-        KrabiceQ.Insert(new Larva());
+    if (!Lihen.Full()) {
+        Enter(Lihen);
+        if (Random() > VEJCE_SE_VYLIHNE) {
+            Wait(Uniform(VEJCE_CAS_LIHNUTI_MIN, VEJCE_CAS_LIHNUTI_MAX)); // cekame nez se vylihne
+            KrabiceQ.Insert(new Larva());
+        }
+        Leave(Lihen);
+    } else {
+        zahozena_vejce++;
     }
 
     vajec--;
@@ -100,28 +112,43 @@ void Vejca::Behavior() {
     if (vajec == 0) {
         // Posledni vejce vylihnute
         (new RozdelAPanuj)->Activate();
-        std::cout << KrabiceQ.Length() << std::endl;
+        DEBUG_PRINT (("KrabiceQ.Length(): %d\n", KrabiceQ.Length()));
     }
 
 };
 
 void VejcaGenerator::Behavior() {
-    moneyBitch -= VEJCE_INIT * VEJCE_CENA;
-    vajec += VEJCE_INIT;
-    for (int i = 0; i < VEJCE_INIT; i++) {
+    moneyBitch -= VELIKOST_LIHNE * VEJCE_CENA;
+    vajec += VELIKOST_LIHNE;
+    for (int i = 0; i < VELIKOST_LIHNE; i++) {
         (new Vejca)->Activate();
     }
 };
 
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        return 1;
+    }
+
+    double arg = atof(argv[1]);
+    if (arg < 0 || arg > 1) {
+        std::cout << "Argument prodej_procent musi byt v intervalu [0, 1]" << std::endl;
+        return 1;
+    }
+
+    prodej_procent = arg;
+
     // init random numbers
     RandomSeed(time(nullptr));
-    // set output file
-    SetOutput("output_stats.dat");
     Init(0, SIMULATION_DAYS);
     (new VejcaGenerator)->Activate();
     Run();
-    std::cout << "Hotovka za " << Time << std::endl;
-    std::cout << "Money na konci: " << moneyBitch << std::endl;
+
+    STATS_PRINT(("Money na konci: %d\n", (int)moneyBitch));
+    STATS_PRINT(("zahozena_vejce: %ld\n", zahozena_vejce));
+    STATS_PRINT(("zahozena_deti: %ld\n", zahozene_deti));
+
+    printf("%.0f; %ld; %ld; %ld\n", prodej_procent * 100, (long)moneyBitch, zahozena_vejce, zahozene_deti);
+    return 0;
 }

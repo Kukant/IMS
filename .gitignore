@@ -6,3 +6,11 @@ src/cmake-build-debug/
 \.idea/
 
 cmake-build-debug/CMakeFiles/clion-log\.txt
+
+src/\.~lock\.stats\.csv#
+
+src/farma
+
+src/output_stats\.dat
+
+src/stats\.csv
