@@ -55,21 +55,29 @@ Petr Knetl (xknetl00) \\
 Tento text vznikl jako dokumentace projetku Modelování a Simulace. Zadáním bylo vytvořit a nasimulovat model Hmyzí farmy v podmínkách uzemí České Republiky. Náš simulovaný model cvrččí farmu, konkrétně vliv druhu chovaných cvrčků na finanční výnos firmy. Další sledovaným aspektem je poměr cvrčků uchovaých pro vytvoření další generace ku dílu zpracovaného a prodaného jako finální produkt fabriky zákazníkům.
 
 \subsection{předloha modelu a zdroje informací}
-Model byl vytvořen na základě informací získaných z internetu a od jednoho týpka co nám poradil TODO. Veškeré zdroje jsou uvedeny na konci dokumentu v referencích.
+Model byl vytvořen na základě informací získaných z internetu. Veškeré zdroje jsou uvedeny na konci dokumentu v v referencích (kapitola \ref{zdroje}.).
 
 \section{Rozbor tématu}
 K vytvoření modelu je potřeba nejprve dobře znát a porozumět jeho předloze. Reálná cvrční farma se zabývá chovem cvrčků pro potravinářské účely. Jedná se o velmi efektivní a udržitelný způsob produkce nutričně kvalitní potravy. V asijských zemích je tento způsob obživy naprostro normální a má svojí tradici, ale do západních zemí se teprve dostáva. Čím dál více je chov hmyzu vyzdvyhován právě kvůli udržitelnosti a celkové ekologické šetrnosti oproti chovu hospodářských zvířat. Předpokládá se že chov hmyzu budu čím dál více šířit, například z důvodu, že se hmyz leto legislativně stane povoleným jídlem v celé Evropské unii. V České republice se žádne velké cvrččí farmy nevyskytují, avšak v zahraničí (převážně v Thajsku) již farmy českých vlastníků existují, a cvrččí produkty importují. 
 
-\subsection{Podmínky chovu}
-K produkci Crčků je potřeba hned několik věcí. Mezi ty nejdůležitějsí patří kvalitní krmení, voda a prostory pro chov kde lze regulovat a hlavně udržovat správnou teplotu a vlhkost vzduchu. Pro správný růst a zdraví cvrčků je potřeba zachovávat teplotu v místnosti mezi dvacetisedmy a třicetidvěma stupni Celsia a vlhkost vzduchu mezi třiceti až padesáti procenty. Pro líhnutí vajíček jsou podmínky ještě přísnější. Na kvalitní vylíhnutí je potřeba udržovat vlhkost blízko sto procentům a teplota nesmí klesnout pod dvacetsedm stupňů Celsia. 
+\subsection{Životní cyklus cvrčků} \label{cyklus} 
+Celý proces (životní cyklus generace) začíná u nakladench vajíček. Vajíčka jsou odebrána od rodičů a přesunuta do líhně, neboli místa splňujícího podmínky na teplotu a vlhkost vzduchu. V líhní stráví vajíčka v průměru mezi deseti až čtrnácti dny. Jakmile se vajíčka vylíhnout, jsou přesunuty zpět do farmy. Další etapa ve vývojí cvrčků je dospívání. To trvá přobližně třicet dní. V průběhu dospívání je potřeba každý den cvrčkům doplňovat vodu a krmení. Voda je cvrčkům podáváná nacucané mycí houbě, která je potřeba pravidelně čistit pro zdraví cvrčků. Jakmile cvrčci dospějí, tak většina je usmrcena zamražením a  připravena pro další zpracování, převážne v celku prodána nebo je z nich vytvořen následný produkt, převážně mouka. Zbytek cvrčků je nechán pro nakladení vajíček a vytvoření další generace. Pro vytvoření další generace stačí zlomek z celkových cvrčků, protože jsou při kladení vajíček velice aktivní a množí se exponenciální rychlostí. 
 
-\subsection{Životní cyklus cvrčků}
-Celý proces (životní cyklus generace) začíná u nakladench vajíček. Vajíčka jsou odebrána od rodičů a přesunuta do líhně, neboli místa splňujícího podmínky na teplotu a vlhkost vzduchu. V líhní stráví vajíčka v průměru mezi deseti až čtrnácti dny. Jakmile se vajíčka vylíhnout, jsou přesunuty zpět do farmy. Další etapa ve vývojí cvrčků je dospívání. To trvá přobližně třicet dní. V průběhu dospívání je potřeba každý den cvrčkům doplňovat vodu a krmení. Voda je cvrčkům podáváná nacucané mycí houbě, která je potřeba pravidelně čistit pro zdraví cvrčků. Jakmile cvrčci dospějí, tak většina je usmrcena připraveno pro další zpracování, převážne v celku pro nebo je z nich vytvořena mouka. Zbytek cvrčků je nechán pro nakladení vajíček a vytvoření další generace. Pro vytvoření další generace stačí zlomek z celkových cvrčků, protože jsou při kladení vajíček velice aktivní a množí se exponenciální rychlostí. 
+\subsection{Podmínky chovu}
+K produkci Crčků je potřeba hned několik věcí. Mezi ty nejdůležitějsí patří kvalitní krmení, voda a prostory pro chov kde lze regulovat a hlavně udržovat správnou teplotu a vlhkost vzduchu. Pro správný růst a zdraví cvrčků je potřeba zachovávat teplotu v místnosti mezi dvacetisedmy a třicetidvěma stupni Celsia a vlhkost vzduchu mezi třiceti až padesáti procenty. Pro líhnutí vajíček jsou podmínky ještě přísnější. Na kvalitní vylíhnutí je potřeba udržovat vlhkost blízko sto procentům a teplota nesmí klesnout pod dvacetsedm stupňů Celsia.
+
+
+
 
 \newpage
 
 \section{Konceptuální návrh}
-Náš koncepotuální model se soustředí na vliv poměru zpracovaných cvrčků a těch kteří jsou ušetřeni pro vytvoření další generace, zároveň se sledováním efektivity chování různýc druhů cvrčků na výši finančního výnosu. Pro takovouto simulaci není potřeba kompletní model farmy, tudiž jsou něteré části zanedbány a model je zjednodušen. Například v našem modelu nedochází ke krmení cvrčků každý den, nýbrž je finanční suma ztržena až po celém životním cyklu cvrčků. Návhr modelu je v podobě petriho sítě zobrazen na obrázku TODO
+Náš koncepotuální model se soustředí na poměru zpracovaných cvrčků a těch kteří jsou ušetřeni pro vytvoření další generace, zároveň se sledováním efektivity chování různýc druhů cvrčků. V závislosti na těchto proměnných sledujeme finanční výnos chovu. Pro takovouto simulaci není potřeba kompletní model farmy, tudiž jsou něteré části zanedbány a model je zjednodušen. Například v našem modelu nedochází ke krmení cvrčků každý den, nýbrž je finanční suma stržena až po celém životním cyklu cvrčků. Návhr modelu je v podobě petriho sítě zobrazen na obrázku TODO.
+
+\subsection{Poměr prodaných ku poměru reprodukčních} %TODO: change subtitle
+Jak již bylo řečeno v kapitole \ref{cyklus}, tak cvrčci se množí exponenciální rychlostí díky obrovské frekvenci kladení vajíček. To umožňuje po dospění velkou část generace usmrtit a prodat, zatímco si jen zlomek (např. 10$\%$) dospělých cvrčků necháme pro početí další generace.V našem výzkumu zkoumáme právě ideální poměr pro maximalizování výnosu farmy. 
+
+Čím více cvrčků se okamžitě po dospění prodá, tím větší okamžitý zisk vznikne, avšak z dlouhodobého hlediska to může být prodělečné, z důvodu nedostatku snesených vajíček a vytvoření příliš malé další generace. Nadruhou stranu pokud necháme přílišně moc cvrčků pro tvoření další generace, tak okamžitý zisk snížíme a navíc musíme uvažovat s útratou na krmení ponechaných cvrčků. Další důležitou proměnnou modelu je fakt, že kapacita cvrččí farmy není nekonečná, tudíž vylíhnuté cvrčky které se už do farmy nevejdou musíme prodat, avšak za mnohem nižší cenu než cvrčky dospělé.
 
 \section{Implementace}
 Simulace byla vytvořena v programovacím jazyku \texttt{C++} s využitím knihovny \texttt{SIMLIB}. Jazyk byl zvolen z důvodu využití objektového návrhu aplikace. Části programu jsou převzaty z přednášek a demostračních příkladů předmětu IMS. 
@@ -88,23 +96,28 @@ d
 \section{Shrnutí výsledků a závěr}
 still nothing
 
-\section{Zdroje informací}
+
+\newpage
+
+\section{Zdroje informací} \label{zdroje}
 \setlength\parindent{0pt}
 
 [1] Feeder Crickets. A Quick Run Down of a Cricket's Life Cycle. The Critter Depot. [online]. 2018, [cit. 2018-12-06]. Dostupné z: https://www.thecritterdepot.com/blogs/news/34185665-a-quick-run-down-of-a-crickets-life-cycl\\
 
-[2] PATOČKOVÁ, Martina. Stamiliony cvrčků pro Evropu. Češi otevřou největší hmyzí farmu na světě. Idnes [online]. 2018, [cit. 2018-12-06]. Dostupné z: https://ekonomika.idnes.cz/hmyz-jidlo-potravina-crvcci-d1j-/ekonomika.aspx?c=A180204\_094800\_ekonomika\_ane\\
+[2] Fluker's Cricket Farm. Live Crickets Farm - Order Online. Fluker's Cricket Farm. [online]. 2018, [cit. 2018-12-06]. Dostupné z: https://flukerfarms.com/live-crickets/ \\
 
-[3] KOIVU TELEVISION. KoivuTV and Johanna Koivu gets acquainted with a Finnish cricket farm [Video File]. 2018, [cit. 2018-12-06]. Dostupné z https://youtu.be/gNG7lOFBM8\\
+[3] Feeder Crickets. A Quick Run Down of a Cricket's Life Cycle. The Critter Depot. [online]. 2018, [cit. 2018-12-06]. Dostupné z: http://www.premiumcrickets.com/Products/Bulk-Cricket-Eggs-approximately-60-000\_\_eggs.aspx \\
 
-[4] COWBOY CRICKETS. Cricket Farming For Food and Feed [Video File]. 2018, [cit. 2018-12-06]. Dostupné z https://youtu.be/JUgDsxWYSS8\\
+[4] PATOČKOVÁ, Martina. Stamiliony cvrčků pro Evropu. Češi otevřou největší hmyzí farmu na světě. Idnes [online]. 2018, [cit. 2018-12-06]. Dostupné z: https://ekonomika.idnes.cz/hmyz-jidlo-potravina-crvcci-d1j-/ekonomika.aspx?c=A180204\_094800\_ekonomika\_ane\\
 
-[5] PERINGER, Petr. Modelování a simulace [online]. 2017, [cit. 2018-12-06]. Dostupné z:\\ https://wis.fit.vutbr.cz/FIT/st/cfs.php?file=\%2Fcourse\%2FIMS-IT\%2Flectures\%2FIMS.pdf\\\&cid=12760 \\
+[5] KOIVU TELEVISION. KoivuTV and Johanna Koivu gets acquainted with a Finnish cricket farm [Video File]. 2018, [cit. 2018-12-06]. Dostupné z https://youtu.be/gNG7lOFBM8\\
 
-[6] PERINGER, Petr. Popis simulační knihovny SIMLIB [online]. 1997, [cit. 2018-12-06]. Dostupné z: https://www.fit.vutbr.cz/~peringer/SIMLIB/doc/html-cz/
+[6] COWBOY CRICKETS. Cricket Farming For Food and Feed [Video File]. 2018, [cit. 2018-12-06]. Dostupné z https://youtu.be/JUgDsxWYSS8\\
 
+[7] PERINGER, Petr. Modelování a simulace [online]. 2017, [cit. 2018-12-06]. Dostupné z:\\ https://wis.fit.vutbr.cz/FIT/st/cfs.php?file=\%2Fcourse\%2FIMS-IT\%2Flectures\%2FIMS.pdf\\\&cid=12760 \\
 
-https://www.thecritterdepot.com/blogs/news/34185665-a-quick-run-down-of-a-crickets-life-cycle
+[8] PERINGER, Petr. Popis simulační knihovny SIMLIB [online]. 1997, [cit. 2018-12-06]. Dostupné z: https://www.fit.vutbr.cz/~peringer/SIMLIB/doc/html-cz/
+
 
 
 
