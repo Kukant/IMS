@@ -2,18 +2,15 @@ CC=c++
 FLAGS = -std=gnu++11
 LIBS= -lsimlib
 
-all: clean farma
+all: farma
 
-stats: clean farma stats_script
+stats: farma stats_script
 
-test: clean farma test_script
+test: farma test_script
 
 farma:
 		$(CC) $(FLAGS) main.cpp -o farma $(LIBS)
 		chmod +x farma
-
-clean:
-		rm farma
 
 stats_script:
 		python3 get_statistics.py

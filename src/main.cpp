@@ -6,18 +6,18 @@
 
 #define SIMULATION_DAYS 365
 
-#define MONEY_INIT 0
+#define PROFIT_INIT 0
 
 /**
  * VSECHNY POCTY S CVRCKAMA/LARVAMA JSOU VE STOVKACH
  */
-// tj 10000
+// tj 20000
 #define KRABICE_KAPACITA 200
 
 // tj cena za 100 cvrcku
 #define CVRCEK_NA_PRODEJ_CENA 195.8f
 
-#define ONE_BOX_FOOD_PRICE 1800
+#define CENA_VYZIVY_JEDEN_CYKLUS 1800
 
 // tj 100 vajec
 #define VEJCE_CENA 14.3f
@@ -37,7 +37,7 @@
 Queue KrabiceQ;
 
 // promenne pro statistiku
-double moneyBitch = MONEY_INIT;
+double profit = PROFIT_INIT;
 long zahozena_vejce = 0;
 long zahozene_deti = 0;
 
@@ -68,10 +68,10 @@ void Rodic::Behavior() {
 
 void Krabice::Behavior() {
     Wait(CVRCEK_CAS_DOSPIVANI); // Doba nez budou cvrci dospeli
-    moneyBitch -= ONE_BOX_FOOD_PRICE; // vem penize na krmeni
-    // 90% prodej
-    moneyBitch += ((int) (KRABICE_KAPACITA * prodej_procent)) * CVRCEK_NA_PRODEJ_CENA;
-    // 10% dej na vytvareni decek
+    profit -= CENA_VYZIVY_JEDEN_CYKLUS; // vem penize na krmeni
+    // x prodej
+    profit += ((int) (KRABICE_KAPACITA * prodej_procent)) * CVRCEK_NA_PRODEJ_CENA;
+    // 1-x nechej na reprodukci
     int na_rozmnozovani = KRABICE_KAPACITA - ((int) (KRABICE_KAPACITA * prodej_procent));
 
     vajec += na_rozmnozovani * POCET_DNU_ROZMNOZOVANI * CVRCEK_POCET_VAJEC_DEN;
@@ -81,8 +81,7 @@ void Krabice::Behavior() {
 };
 
 // zpracovava frontu pred krabici
-// maximum narve do krabice, zbytek proda.
-// simulujeme vice krabic - uz ne pls
+// maximum vlozi do krabice, zbytek proda.
 void RozdelAPanuj::Behavior() {
     if (KrabiceQ.Length() >= KRABICE_KAPACITA) {
         // dejme je do krabice
@@ -118,7 +117,7 @@ void Vejca::Behavior() {
 };
 
 void VejcaGenerator::Behavior() {
-    moneyBitch -= VELIKOST_LIHNE * VEJCE_CENA;
+    profit -= VELIKOST_LIHNE * VEJCE_CENA;
     vajec += VELIKOST_LIHNE;
     for (int i = 0; i < VELIKOST_LIHNE; i++) {
         (new Vejca)->Activate();
@@ -145,10 +144,10 @@ int main(int argc, char *argv[]) {
     (new VejcaGenerator)->Activate();
     Run();
 
-    STATS_PRINT(("Money na konci: %d\n", (int)moneyBitch));
+    STATS_PRINT(("Money na konci: %d\n", (int)profit));
     STATS_PRINT(("zahozena_vejce: %ld\n", zahozena_vejce));
     STATS_PRINT(("zahozena_deti: %ld\n", zahozene_deti));
 
-    printf("%.0f; %ld; %ld; %ld\n", prodej_procent * 100, (long)moneyBitch, zahozena_vejce, zahozene_deti);
+    printf("%.0f; %ld; %ld; %ld\n", prodej_procent * 100, (long)profit, zahozena_vejce, zahozene_deti);
     return 0;
 }

@@ -1,4 +1,4 @@
-#!/usr/env python3
+#!/usr/bin/env python3
 
 import sys
 import os
@@ -10,7 +10,7 @@ script_path = os.path.join(os.getcwd(), "farma")
 print(sys.argv[0])
 
 with open("stats.csv", "w") as fw:
-    fw.write("prodej_procent; moneyBitch; zahozena_vejce; zahozene_deti\n")
+    fw.write("prodej_procent; profit; zahozena_vejce; zahozene_deti\n")
 
 # 0 - 90 procent, skok po 5
 for x in range(0, 91, 5):
