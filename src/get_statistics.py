@@ -7,8 +7,6 @@ import subprocess
 
 script_path = os.path.join(os.getcwd(), "farma")
 
-print(sys.argv[0])
-
 with open("stats.csv", "w") as fw:
     fw.write("prodej_procent; profit; zahozena_vejce; zahozene_deti\n")
 

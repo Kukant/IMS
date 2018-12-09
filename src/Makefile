@@ -4,6 +4,8 @@ LIBS= -lsimlib
 
 all: farma
 
+run: stats_script
+
 stats: farma stats_script
 
 test: farma test_script
